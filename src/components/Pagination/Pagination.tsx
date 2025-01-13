@@ -17,27 +17,21 @@ export const Pagination: React.FC<Props> = ({
   const isNextPageDisabled = currentPage >= totalPages;
 
   const handlePageChange = (page: number) => {
-    if (page === currentPage) {
-      return;
+    if (page !== currentPage) {
+      onPageChange(page);
     }
-
-    onPageChange(page);
   };
 
   const handleSetPreviousPage = () => {
-    if (isPreviousPageDisabled) {
-      return;
+    if (!isPreviousPageDisabled) {
+      onPageChange(currentPage - 1);
     }
-
-    onPageChange(currentPage - 1);
   };
 
   const handleSetNextPage = () => {
-    if (isNextPageDisabled) {
-      return;
+    if (!isNextPageDisabled) {
+      onPageChange(currentPage + 1);
     }
-
-    onPageChange(currentPage + 1);
   };
 
   return (
