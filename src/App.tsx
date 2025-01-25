@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+/* eslint-disable import/no-extraneous-dependencies */
+import React, { useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import './App.css';
 import { getNumbers } from './utils';
 import { Pagination } from './components/Pagination';
@@ -9,11 +11,14 @@ const items = getNumbers(1, 42).map(n => `Item ${n}`);
 const PAGE_OPTIONS = [3, 5, 10, 20];
 
 export const App: React.FC = () => {
-  const [pageSize, setPageSize] = useState(5);
-  const [currentPage, setCurrentPage] = useState(1);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [pageSize, setPageSize] = useState(
+    Number(searchParams.get('perPage')) || 5,
+  );
+  const [currentPage, setCurrentPage] = useState(
+    Number(searchParams.get('page')) || 1,
+  );
   const totalItems = items.length;
-
-  const totalPages = Math.ceil(totalItems / pageSize);
 
   const startIndex = (currentPage - 1) * pageSize;
   const endIndex = startIndex + pageSize;
@@ -26,6 +31,13 @@ export const App: React.FC = () => {
     setPageSize(+event.target.value);
     setCurrentPage(1);
   };
+
+  useEffect(() => {
+    setSearchParams({
+      page: currentPage.toString(),
+      perPage: pageSize.toString(),
+    });
+  }, [currentPage, pageSize, setSearchParams]);
 
   return (
     <div className="container">
@@ -59,7 +71,8 @@ export const App: React.FC = () => {
       </div>
 
       <Pagination
-        totalPages={totalPages}
+        total={totalItems}
+        perPage={pageSize}
         currentPage={currentPage}
         onPageChange={setCurrentPage}
       />

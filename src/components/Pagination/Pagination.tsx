@@ -2,16 +2,19 @@ import React from 'react';
 import cn from 'classnames';
 
 type Props = {
-  totalPages: number;
+  total: number;
+  perPage: number;
   currentPage: number;
   onPageChange: (page: number) => void;
 };
 
 export const Pagination: React.FC<Props> = ({
-  totalPages,
+  total,
+  perPage,
   currentPage,
   onPageChange,
 }) => {
+  const totalPages = Math.ceil(total / perPage);
   const pages = Array.from({ length: totalPages }, (_, i) => i + 1);
   const isPreviousPageDisabled = currentPage <= 1;
   const isNextPageDisabled = currentPage >= totalPages;
